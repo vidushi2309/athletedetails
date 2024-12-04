@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Athlete Profile</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Styles for the modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      width: 400px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .modal.active {
+      display: block;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      font-size: 20px;
+      background: none;
+      border: none;
+    }
+
+    .modal input, .modal select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    .modal button {
+      padding: 10px;
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal button:hover {
+      background-color: #0056b3;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    img#edit-preview {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 10px auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Player Panel</h2>
+    <ul>
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="events.html">Upcoming Events</a></li>
+      <li><a href="performance.html">Performance</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+      <li><a href="reminders.html">Event Reminders</a></li>
+      <li><a href="assistance.html">Request Assistance</a></li>
+      <li><a href="athlete-details.html">Athlete Details</a></li>
+      <li><a href="training-schedule.html">Training Schedule</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <section class="profile-section">
+      <div class="profile-header">
+        <img id="athlete-image-preview" src="profile-placeholder.png" alt="Athlete Image" style="width: 150px; height: 150px; border-radius: 50%;">
+        <div class="profile-details">
+          <p><strong>Name:</strong> <span id="display-name">Liam Carter</span></p>
+          <p><strong>Date of Birth:</strong> <span id="display-dob">10/10/2000</span></p>
+          <p><strong>Gender:</strong> <span id="display-gender">Male</span></p>
+          <p><strong>Height:</strong> <span id="display-height">170 cm</span></p>
+          <p><strong>Weight:</strong> <span id="display-weight">60 kg</span></p>
+          <p><strong>Category:</strong> <span id="display-category">100M</span></p>
+          <p><strong>Coach:</strong> <span id="display-coach">N/A</span></p>
+          <button id="edit-button" onclick="showEditForm()">Edit</button>
+        </div>
+      </div>
+    </section>
+    <section class="performance-section">
+      <h2>Top Performances</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Meet Name</th>
+            <th>Event Name</th>
+            <th>Score</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Lightning Bolt Championships</td>
+            <td>DiscusForce Throw</td>
+            <td>100</td>
+            <td>Good</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="performance-section">
+      <h2>Performance Results</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Meet Name</th>
+            <th>Event Name</th>
+            <th>Category</th>
+            <th>Venue</th>
+            <th>Score</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Lightning Bolt Championships</td>
+            <td>DiscusForce Throw</td>
+            <td>Throw</td>
+            <td>Paris</td>
+            <td>100</td>
+            <td>Good</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Modal for editing -->
+  <div class="modal" id="edit-modal">
+    <div class="modal-header">
+      <h2>Edit Athlete Details</h2>
+      <button class="modal-close" onclick="closeEditForm()">×</button>
+    </div>
+    <img id="edit-preview" src="profile-placeholder.png" alt="Athlete Image">
+    <input type="file" id="athlete-image" accept="image/*" onchange="previewImage(event)">
+    <input type="text" id="athlete-name" placeholder="Name" value="Liam Carter">
+    <input type="date" id="athlete-dob" value="2000-10-10">
+    <select id="athlete-gender">
+      <option value="Male" selected>Male</option>
+      <option value="Female">Female</option>
+    </select>
+    <input type="number" id="athlete-height" placeholder="Height (cm)" value="170">
+    <input type="number" id="athlete-weight" placeholder="Weight (kg)" value="60">
+    <input type="text" id="athlete-category" placeholder="Category" value="100M">
+    <input type="text" id="athlete-coach" placeholder="Coach" value="N/A">
+    <button onclick="saveDetails()">Save</button>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:8080/user'; // Backend API endpoint
+
+    // Fetch athlete details on page load
+    async function fetchAthleteDetails() {
+      try {
+        const response = await fetch(API_URL);
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById('display-name').innerText = data.name || 'N/A';
+          document.getElementById('display-dob').innerText = data.dob || 'N/A';
+          document.getElementById('display-gender').innerText = data.gender || 'N/A';
+          document.getElementById('display-height').innerText = (data.height || 'N/A') + ' cm';
+          document.getElementById('display-weight').innerText = (data.weight || 'N/A') + ' kg';
+          document.getElementById('display-category').innerText = data.category || 'N/A';
+          document.getElementById('display-coach').innerText = data.coach || 'N/A';
+          document.getElementById('athlete-image-preview').src = data.image || 'profile-placeholder.png';
+        } else {
+          console.error('Failed to fetch athlete details');
+        }
+      } catch (error) {
+        console.error('Error fetching athlete details:', error);
+      }
+    }
+
+    // Save updated athlete details
+    async function saveDetails() {
+      const formData = new FormData();
+      const imageFile = document.getElementById('athlete-image').files[0];
+
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      formData.append('name', document.getElementById('athlete-name').value);
+      formData.append('dob', document.getElementById('athlete-dob').value);
+      formData.append('gender', document.getElementById('athlete-gender').value);
+      formData.append('height', document.getElementById('athlete-height').value);
+      formData.append('weight', document.getElementById('athlete-weight').value);
+      formData.append('category', document.getElementById('athlete-category').value);
+      formData.append('coach', document.getElementById('athlete-coach').value);
+
+      try {
+        const response = await fetch('http://localhost:8080/user', {
+          method: 'POST',
+          body: formData, // Automatically sets Content-Type to multipart/form-data
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert(data.message || 'Athlete details updated successfully!');
+          closeEditForm();
+          await fetchAthleteDetails(); // Refresh the UI with updated details
+        } else {
+          const errorData = await response.text();
+          console.error('Error response:', errorData);
+          alert('Failed to update athlete details. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error saving athlete details:', error);
+        alert('An error occurred while updating athlete details.');
+      }
+    }
+
+
+    // Preview uploaded image
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        document.getElementById('edit-preview').src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // Open and close modal
+    function showEditForm() {
+      document.getElementById('edit-modal').classList.add('active');
+      document.getElementById('overlay').classList.add('active');
+    }
+
+    function closeEditForm() {
+      document.getElementById('edit-modal').classList.remove('active');
+      document.getElementById('overlay').classList.remove('active');
+    }
+
+    // Fetch details on page load
+    document.addEventListener('DOMContentLoaded', fetchAthleteDetails);
+  </script>
+  </body>
+  </html>
+
+
